@@ -1,59 +1,35 @@
-import ipaddress
-from prettytable import PrettyTable
+# Web-Based IP Address Scheme Calculator
 
-# Define the classes
-    classes = {
-    'A': '0.0.0.0/1',
-    'B': '128.0.0.0/2',
-    'C': '192.0.0.0/3'
-    }
+This is a simple, client-side web application for calculating IP addressing schemes. It allows you to input a network IP and subnet mask, and optionally request calculations based on a desired number of subnets or a desired number of devices per subnet.
 
-# Print the details for each class
-    for class_name, network in classes.items():
-# Create a new table for each class
-    table = PrettyTable(['Prefix', 'Netmask'])
+## Features
 
-    for prefix in range(1, 33):
-        net = ipaddress.ip_network(f'{network.split("/")[0]}/{prefix}', strict=False)
-        # Add the details to the table
-        table.add_row([prefix, str(net.netmask)])
+*   Calculates Network ID, Broadcast ID, Subnet Mask, Usable Host Range, and Number of Usable Hosts for a given IP and mask.
+*   Subdivide a network based on a desired number of subnets.
+*   Calculate the required subnet size based on a desired number of devices per subnet, and list resulting subnets.
+*   Input validation and clear error messages.
+*   Client-side calculations (no server-side processing needed).
 
-# Print the table
-    print(f'\nClass {class_name}:')
-    print(table)
+## How to Use
 
-    def calculate_ip_scheme(ip_input):
-         try:
-# Create an IP interface for subnet mask calculation
-        ip_interface = ipaddress.ip_interface(ip_input)
-        # Create a network from the IP interface
-        network = ip_interface.network
+1.  Clone or download the repository.
+2.  Open the `index.html` file in any modern web browser.
+3.  Fill in the input fields:
+    *   **IP Address:** Enter a valid IPv4 address (e.g., `192.168.1.0`). This can be any IP within the network; the tool will determine the network ID.
+    *   **Subnet Mask:** Enter the subnet mask for the IP address. This can be in dotted decimal format (e.g., `255.255.255.0`) or CIDR prefix format (e.g., `/24`).
+    *   **Number of Desired Subnets (Optional):** If you want to divide the above network into a specific number of smaller subnets, enter the count here.
+    *   **Number of Desired Devices per Subnet (Optional):** If you want to create subnets that can each support a specific number of devices, enter that count here. *Note: Do not fill both "Number of Subnets" and "Number of Devices" at the same time.*
+4.  Click the "Calculate" button.
+5.  The results will be displayed below the form.
 
-# Get the first and last usable IP addresses in the network
-        first_usable = next(network.hosts())
-        last_usable = list(network.hosts())[-1]
+## Technologies Used
 
-        print("-----------------------------------------------------------------------------------------------")
+*   HTML
+*   CSS
+*   JavaScript (ES6+)
 
-        # Print the network ID, subnet mask, broadcast ID, and the maximum possible number of hosts
-        print(f"Network ID: {network.network_address}")
-        print(f"Subnet mask: {ip_interface.netmask}")
-        print(f"First usable IP address: {first_usable}")
-        print(f"Last usable IP address: {last_usable}")
-        print(f"Broadcast ID: {network.broadcast_address}")
-        print(f"Maximum possible number of hosts: {network.num_addresses - 2}")  # Subtracting network and broadcast addresses
+## Files
 
-    except ValueError as e:
-        print(f"Error: {e}")
-
-    while True:
-# Prompt the user for the IP address and subnet mask
-    ip_input = input("Enter the IP address with subnet (192.168.1.0/24) or type 'exit': ")
-    
-# Check if the user wants to exit the loop
-    if ip_input.lower() == 'exit':
-        print("Exiting the program.")
-        break
-
-    calculate_ip_scheme(ip_input)
-    print("\n")  # Print a newline for better readability before the next prompt
+*   `index.html`: The main HTML file containing the structure of the calculator.
+*   `style.css`: Contains the CSS rules for styling the application.
+*   `script.js`: Contains all the JavaScript logic for IP calculations and interactivity.
